@@ -27,3 +27,10 @@ echo "exec qtile start > ~/.qtile.log" > ~/.xsession
 
 # configure startx to start on login
 echo "if [[ -z \$DISPLAY ]] && [[ \$(tty) = /dev/tty1 ]]; then exec startx; fi" > ~/.zprofile
+
+# upload qtile config file
+mkdir -p ~/.config/qtile
+rm -rf ~/.config/qtile/config.py
+wget -O ~/.config/qtile/config.py https://raw.githubusercontent.com/fedemahf/debian-environment/master/dotfiles/config.py
+rm -rf ~/.Xresources
+wget -O ~/.Xresources https://raw.githubusercontent.com/fedemahf/debian-environment/master/dotfiles/.Xresources
