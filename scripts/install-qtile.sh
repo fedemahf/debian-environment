@@ -48,7 +48,12 @@ if ! [[ id -nG "$USER_NAME" | grep -qw "sudo" ]]; then
   esac
 fi
 
-USER_HOMEDIR="/home/$USER_NAME"
+USER_HOME_DIR="/home/$USER_NAME"
+USER_QTILE_CONFIG_DIR="$USER_HOME_DIR/.config/qtile"
+
+update_file_owner() {
+  chown $USER_NAME:$USER_NAME "$1"
+}
 
 # install useful packages
 apt install sudo wget git curl rxvt-unicode zsh neofetch -y
@@ -60,23 +65,32 @@ apt install python3-pip python3-cffi python3-xcffib python3-cairocffi libpangoca
 pip install qtile psutil
 
 # configure startx to start qtile
-echo "exec qtile start > ~/.qtile.log" > $USER_HOMEDIR/.xsession
-chown $USER_NAME:$USER_NAME $USER_HOMEDIR/.xsession
+echo "exec qtile start > ~/.qtile.log" > "$USER_HOME_DIR/.xsession"
+update_file_owner "$USER_HOME_DIR/.xsession"
 
 # configure startx to start on login
-echo "if [[ -z \$DISPLAY ]] && [[ \$(tty) = /dev/tty1 ]]; then exec startx; fi" > $USER_HOMEDIR/.zprofile
-chown $USER_NAME:$USER_NAME $USER_HOMEDIR/.zprofile
+echo "if [[ -z \$DISPLAY ]] && [[ \$(tty) = /dev/tty1 ]]; then exec startx; fi" > $USER_HOME_DIR/.zprofile
+update_file_owner "$USER_HOME_DIR/.zprofile"
 
-# upload qtile config file
-mkdir -p $USER_HOMEDIR/.config/qtile
-rm -rf $USER_HOMEDIR/.config/qtile/config.py
-wget -O $USER_HOMEDIR/.config/qtile/config.py $GITHUB_REPO_URL/dotfiles/config.py
-chown $USER_NAME:$USER_NAME $USER_HOMEDIR/config.py
+# create qtile config folder
+mkdir -p "$USER_QTILE_CONFIG_DIR"
 
-rm -rf $USER_HOMEDIR/.Xresources
-wget -O $USER_HOMEDIR/.Xresources $GITHUB_REPO_URL/dotfiles/.Xresources
-chown $USER_NAME:$USER_NAME $USER_HOMEDIR/.Xresources
+# download `config.py`
+rm -f "$USER_QTILE_CONFIG_DIR/config.py"
+wget -O "$USER_QTILE_CONFIG_DIR/config.py" "$GITHUB_REPO_URL/qtile/config.py"
+update_file_owner "$USER_QTILE_CONFIG_DIR/config.py"
 
+# download `crypto_ticker_binance.py` (custom widget)
+rm -f "$USER_QTILE_CONFIG_DIR/crypto_ticker_binance.py"
+wget -O "$USER_QTILE_CONFIG_DIR/crypto_ticker_binance.py" "$GITHUB_REPO_URL/qtile/crypto_ticker_binance.py"
+update_file_owner "$USER_QTILE_CONFIG_DIR/crypto_ticker_binance.py"
+
+# download .Xresources
+rm -f "$USER_HOME_DIR/.Xresources"
+wget -O "$USER_HOME_DIR/.Xresources" "$GITHUB_REPO_URL/dotfiles/.Xresources"
+update_file_owner "$USER_HOME_DIR/.Xresources"
+
+# send exit message
 echo ""
 echo "Run `dpkg-reconfigure keyboard-configuration` and enable the"
 echo "Control+Alt+Backspace combination to terminate X server."
