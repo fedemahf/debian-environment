@@ -30,6 +30,7 @@ from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from crypto_ticker_binance import CryptoTickerBinance
 
 mod = "mod4"
 terminal = guess_terminal()
@@ -173,12 +174,18 @@ screens = [
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
 		# widget.Clipboard(),
                 # widget.CurrentLayout(fmt='{}   | '),
-		widget.CryptoTicker(
+                CryptoTickerBinance(
 			update_interval=10,
 			crypto="BTC",
-			currency="USD",
+			currency="USDT",
 			format='{crypto}: {symbol}{amount:.2f}   | '
 		),
+                CryptoTickerBinance(
+                        update_interval=10,
+                        crypto="BNB",
+                        currency="USDT",
+                        format='{crypto}: {symbol}{amount:.2f}   | '
+                ),
 		# widget.Spacer(length=10),
 		widget.CheckUpdates(
 			distro="Debian",
