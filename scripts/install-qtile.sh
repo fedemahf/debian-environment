@@ -9,22 +9,47 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+echo ""
+echo "Before installing qtile, this program will install several packages."
+echo ""
+echo "Useful packages: sudo wget git curl rxvt-unicode zsh neofetch"
+echo ""
+echo "Qtile dependencies: python3-pip python3-cffi python3-xcffib"
+echo "python3-cairocffi libpangocairo-1.0-0 xorg xserver-xorg"
+echo ""
+echo "It also will run an `apt update`."
+echo ""
+
+read -p "Do you agree? (y/n) "
+case "$REPLY" in
+  y|Y)
+    echo "You give your permission. The packages will be installed now."
+  ;;
+  *)
+    echo "You refused to install the required packages. Aborting program..."
+    exit 1
+  ;;
+esac
+
+# update packages
+apt update
+
+# install useful packages & qtile dependencies
+apt install -y \
+  sudo wget git curl rxvt-unicode zsh neofetch \
+  python3-pip python3-cffi python3-xcffib python3-cairocffi libpangocairo-1.0-0 xorg xserver-xorg
+
 # Get the user name
 echo "Qtile needs to be installed for each user."
 read -p "Please provide the user name: " USER_NAME
 
 # Check if provided user exists
 if [[ ! id -u "$USER_NAME" >/dev/null 2>&1 ]]; then
-  read -p "The user ('$USER_NAME') doesn't exists. Do you want to create it? (y/n)"
+  read -p "The user ('$USER_NAME') doesn't exists. Do you want to create it? (y/n) "
   case "$REPLY" in
     y|Y)
       echo "Creating user '$USER_NAME'..."
       adduser $USER_NAME
-
-      echo "Installing zsh..."
-      apt install zsh -y
-
-      echo "Updating default shell of $USER_NAME to /usr/bin/zsh"
       chsh -s /usr/bin/zsh $USER_NAME
     ;;
     *)
@@ -36,7 +61,7 @@ fi
 
 # Check if provided user is in sudoers file
 if ! [[ id -nG "$USER_NAME" | grep -qw "sudo" ]]; then
-  read -p "The user ('$USER_NAME') is not in the sudoers group. Do you want to add it to sudoers? (y/n)"
+  read -p "The user ('$USER_NAME') is not in the sudoers group. Do you want to add it to sudoers? (y/n) "
   case "$REPLY" in
     y|Y)
       echo "Adding '$USER_NAME' to sudoers group..."
@@ -54,12 +79,6 @@ USER_QTILE_CONFIG_DIR="$USER_HOME_DIR/.config/qtile"
 update_file_owner() {
   chown $USER_NAME:$USER_NAME "$1"
 }
-
-# install useful packages
-apt install sudo wget git curl rxvt-unicode zsh neofetch -y
-
-# install qtile dependencies
-apt install python3-pip python3-cffi python3-xcffib python3-cairocffi libpangocairo-1.0-0 xorg xserver-xorg -y
 
 # install qtile
 pip install qtile psutil
