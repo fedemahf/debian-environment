@@ -46,7 +46,7 @@ read -p "Please provide the user name: " USER_NAME
 echo ""
 
 # Check if provided user exists
-if ( id -u "$USER_NAME" >/dev/null 2>&1 ); then
+if ! ( id -u "$USER_NAME" >/dev/null 2>&1 ); then
   read -p "The user ('$USER_NAME') doesn't exists. Do you want to create it? (y/n) "
   case "$REPLY" in
     y|Y)
