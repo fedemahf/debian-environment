@@ -17,7 +17,7 @@ echo ""
 echo "Qtile dependencies: python3-pip python3-cffi python3-xcffib"
 echo "python3-cairocffi libpangocairo-1.0-0 xorg xserver-xorg"
 echo ""
-echo "It also will run an `apt update`."
+echo "It also will run an \`apt update\`."
 echo ""
 
 read -p "Do you agree? (y/n) "
@@ -111,7 +111,7 @@ update_file_owner "$USER_HOME_DIR/.Xresources"
 
 # send exit message
 echo ""
-echo "Run `dpkg-reconfigure keyboard-configuration` and enable the"
+echo "Run \`dpkg-reconfigure keyboard-configuration\` and enable the"
 echo "Control+Alt+Backspace combination to terminate X server."
 echo ""
 echo "Qtile installation done."
