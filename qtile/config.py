@@ -148,7 +148,7 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font='sans',
+    font='mono',
     fontsize=12,
     padding=3,
 )
@@ -169,46 +169,46 @@ screens = [
                     name_transform=lambda name: name.upper(),
                 ),
                 widget.GroupBox(hide_unused=True, disable_drag=True),
-                widget.TextBox(" | "),
+                widget.TextBox("| "),
                 # widget.TextBox("default config", name="default"),
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-		# widget.Clipboard(),
+                # widget.Clipboard(),
                 # widget.CurrentLayout(fmt='{}   | '),
                 CryptoTickerBinance(
-			update_interval=10,
-			crypto="BTC",
-			currency="USDT",
-			format='{crypto}: {symbol}{amount:.2f}   | '
-		),
-                CryptoTickerBinance(
-                        update_interval=10,
-                        crypto="BNB",
-                        currency="USDT",
-                        format='{crypto}: {symbol}{amount:.2f}   | '
+                    update_interval=10,
+                    crypto="BTC",
+                    currency="USDT",
+                    format='{crypto}: {symbol}{amount:.2f}  | '
                 ),
-		# widget.Spacer(length=10),
-		widget.CheckUpdates(
-			distro="Debian",
-			colour_have_updates="ff0000",
-			display_format="Updates available: {updates}",
-                        no_update_string="System up to date"
-		),
+                CryptoTickerBinance(
+                    update_interval=10,
+                    crypto="BNB",
+                    currency="USDT",
+                    format='{crypto}: {symbol}{amount:.2f}  | '
+                ),
+                # widget.Spacer(length=10),
+                widget.CheckUpdates(
+                    distro="Debian",
+                    colour_have_updates="ff0000",
+                    display_format="Updates available: {updates}",
+                    no_update_string="System up to date"
+                ),
                 widget.TextBox(" | "),
-		widget.Net(format='rx: {down}, tx: {up}'),
-		widget.NetGraph(),
-		widget.Memory(),
-		widget.MemoryGraph(),
-		widget.CPU(format='CPU {load_percent}%'),
-		widget.CPUGraph(),
+                widget.Net(format='rx: {down}, tx: {up}'),
+                widget.NetGraph(),
+                widget.Memory(),
+                widget.MemoryGraph(),
+                widget.CPU(format='CPU {load_percent:02.0f}%'),
+                widget.CPUGraph(),
                 widget.Systray(),
                 widget.Clock(format='%Y-%m-%d, %H:%Mhs'),
                 # widget.QuickExit(),
-		# widget.Wallpaper(wallpaper='wallpaper.jpg')
+                # widget.Wallpaper(wallpaper='wallpaper.jpg')
             ],
             24
         ),
-	wallpaper='~/Downloads/BIKER_GIRL.jpg',
-	wallpaper_mode='stretch'
+        wallpaper='~/Downloads/BIKER_GIRL.jpg',
+        wallpaper_mode='stretch'
     ),
     Screen(bottom=bar.Bar([widget.Prompt(), widget.WindowName()], 24))
 ]
@@ -254,4 +254,3 @@ auto_minimize = True
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
-
