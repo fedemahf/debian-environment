@@ -23,7 +23,7 @@ echo ""
 read -p "Do you agree? (y/n) "
 case "$REPLY" in
   y|Y)
-    echo "You give your permission. The packages will be installed now."
+    echo "You gave your permission. The packages will be installed now."
   ;;
   *)
     echo "You refused to install the required packages. Aborting program..."
@@ -40,11 +40,13 @@ apt install -y \
   python3-pip python3-cffi python3-xcffib python3-cairocffi libpangocairo-1.0-0 xorg xserver-xorg
 
 # Get the user name
+echo ""
 echo "Qtile needs to be installed for each user."
 read -p "Please provide the user name: " USER_NAME
+echo ""
 
 # Check if provided user exists
-if [[ ! id -u "$USER_NAME" >/dev/null 2>&1 ]]; then
+if ( id -u "$USER_NAME" >/dev/null 2>&1 ); then
   read -p "The user ('$USER_NAME') doesn't exists. Do you want to create it? (y/n) "
   case "$REPLY" in
     y|Y)
@@ -60,7 +62,7 @@ if [[ ! id -u "$USER_NAME" >/dev/null 2>&1 ]]; then
 fi
 
 # Check if provided user is in sudoers file
-if ! [[ id -nG "$USER_NAME" | grep -qw "sudo" ]]; then
+if ! ( id -nG "$USER_NAME" | grep -qw "sudo" ); then
   read -p "The user ('$USER_NAME') is not in the sudoers group. Do you want to add it to sudoers? (y/n) "
   case "$REPLY" in
     y|Y)
