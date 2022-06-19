@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-sudo cat "
+sudo echo "
 deb http://deb.debian.org/debian/ bullseye main contrib non-free
 deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
 
