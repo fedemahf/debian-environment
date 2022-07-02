@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-GITHUB_REPO_URL="https://raw.githubusercontent.com/fedemahf/debian-environment/master"
+# GITHUB_REPO_URL="https://raw.githubusercontent.com/fedemahf/debian-environment/master"
 
 # Check if the user is root
 if [ "$EUID" -ne 0 ]; then
@@ -78,6 +78,11 @@ fi
 USER_HOME_DIR="/home/$USER_NAME"
 USER_QTILE_CONFIG_DIR="$USER_HOME_DIR/.config/qtile"
 
+# https://stackoverflow.com/a/246128
+REPO_SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+REPO_DOTFILES_DIR="$REPO_SCRIPT_DIR/../dotfiles"
+REPO_QTILE_DIR="$REPO_SCRIPT_DIR/../qtile"
+
 update_file_owner() {
   chown $USER_NAME:$USER_NAME "$1"
 }
@@ -85,31 +90,25 @@ update_file_owner() {
 # install qtile
 pip install qtile psutil
 
-# configure startx to start qtile
-echo "exec qtile start > ~/.qtile.log" > "$USER_HOME_DIR/.xsession"
-update_file_owner "$USER_HOME_DIR/.xsession"
-
-# configure startx to start on login
-echo "if [[ -z \$DISPLAY ]] && [[ \$(tty) = /dev/tty1 ]]; then exec startx; fi" > $USER_HOME_DIR/.zprofile
-update_file_owner "$USER_HOME_DIR/.zprofile"
-
 # create qtile config folder
 mkdir -p "$USER_QTILE_CONFIG_DIR"
 
-# download `config.py`
-rm -f "$USER_QTILE_CONFIG_DIR/config.py"
-wget -O "$USER_QTILE_CONFIG_DIR/config.py" "$GITHUB_REPO_URL/qtile/config.py"
-update_file_owner "$USER_QTILE_CONFIG_DIR/config.py"
+# create user logs folder
+mkdir -p "$USER_HOME_DIR/logs"
 
-# download `crypto_ticker_binance.py` (custom widget)
-rm -f "$USER_QTILE_CONFIG_DIR/crypto_ticker_binance.py"
-wget -O "$USER_QTILE_CONFIG_DIR/crypto_ticker_binance.py" "$GITHUB_REPO_URL/qtile/crypto_ticker_binance.py"
-update_file_owner "$USER_QTILE_CONFIG_DIR/crypto_ticker_binance.py"
+echo "Copying qtile files..."
+for filename in $REPO_QTILE_DIR/*; do
+  rm -f "${USER_QTILE_CONFIG_DIR}/${filename}"
+  cp "${REPO_QTILE_DIR}/${filename}" "${USER_QTILE_CONFIG_DIR}/"
+  update_file_owner "${REPO_QTILE_DIR}/${filename}"
+done
 
-# download .Xresources
-rm -f "$USER_HOME_DIR/.Xresources"
-wget -O "$USER_HOME_DIR/.Xresources" "$GITHUB_REPO_URL/dotfiles/.Xresources"
-update_file_owner "$USER_HOME_DIR/.Xresources"
+echo "Copying dotfiles..."
+for filename in $REPO_DOTFILES_DIR/*; do
+  rm -f "${USER_HOME_DIR}/${filename}"
+  cp "${REPO_DOTFILES_DIR}/${filename}" "${USER_HOME_DIR}/"
+  update_file_owner "${REPO_DOTFILES_DIR}/${filename}"
+done
 
 # send exit message
 echo ""
