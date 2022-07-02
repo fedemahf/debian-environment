@@ -1,0 +1,8 @@
+#!/bin/bash
+if [[ $(docker ps -q) ]]; then
+	echo "Stopping docker containers..."
+	docker stop $(docker ps -q)
+	echo "Done stopping docker containers"
+else
+	echo "There are no docker containers running"
+fi
