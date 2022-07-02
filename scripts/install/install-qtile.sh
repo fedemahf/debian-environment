@@ -75,13 +75,16 @@ if ! ( id -nG "$USER_NAME" | grep -qw "sudo" ); then
   esac
 fi
 
-USER_HOME_DIR="/home/$USER_NAME"
-USER_QTILE_CONFIG_DIR="$USER_HOME_DIR/.config/qtile"
+USER_DIR_HOME="/home/$USER_NAME"
+USER_DIR_QTILE_CONFIG="$USER_DIR_HOME/.config/qtile"
+USER_DIR_SCRIPTS="${USER_DIR_HOME}/scripts"
 
 # https://stackoverflow.com/a/246128
-REPO_SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-REPO_DOTFILES_DIR="$REPO_SCRIPT_DIR/../dotfiles"
-REPO_QTILE_DIR="$REPO_SCRIPT_DIR/../qtile"
+REPO_DIR_SCRIPTS_INSTALL=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+REPO_DIR_ROOT="${REPO_DIR_SCRIPTS_INSTALL}/../.."
+REPO_DIR_SCRIPTS_USER="${REPO_DIR_ROOT}/scripts/user"
+REPO_DIR_DOTFILES="${REPO_DIR_ROOT}/dotfiles"
+REPO_DIR_QTILE="${REPO_DIR_ROOT}/qtile"
 
 update_file_owner() {
   chown $USER_NAME:$USER_NAME "$1"
@@ -90,24 +93,30 @@ update_file_owner() {
 # install qtile
 pip install qtile psutil
 
-# create qtile config folder
-mkdir -p "$USER_QTILE_CONFIG_DIR"
-
-# create user logs folder
-mkdir -p "$USER_HOME_DIR/logs"
+# create logs folder
+mkdir -p "$USER_DIR_HOME/logs"
 
 echo "Copying qtile files..."
-for filename in $REPO_QTILE_DIR/*; do
-  rm -f "${USER_QTILE_CONFIG_DIR}/${filename}"
-  cp "${REPO_QTILE_DIR}/${filename}" "${USER_QTILE_CONFIG_DIR}/"
-  update_file_owner "${REPO_QTILE_DIR}/${filename}"
+mkdir -p "$USER_DIR_QTILE_CONFIG"
+for filename in $REPO_DIR_QTILE/*; do
+  rm -f "${USER_DIR_QTILE_CONFIG}/${filename}"
+  cp "${REPO_DIR_QTILE}/${filename}" "${USER_DIR_QTILE_CONFIG}/"
+  update_file_owner "${REPO_DIR_QTILE}/${filename}"
 done
 
 echo "Copying dotfiles..."
-for filename in $REPO_DOTFILES_DIR/*; do
-  rm -f "${USER_HOME_DIR}/${filename}"
-  cp "${REPO_DOTFILES_DIR}/${filename}" "${USER_HOME_DIR}/"
-  update_file_owner "${REPO_DOTFILES_DIR}/${filename}"
+for filename in $REPO_DIR_DOTFILES/*; do
+  rm -f "${USER_DIR_HOME}/${filename}"
+  cp "${REPO_DIR_DOTFILES}/${filename}" "${USER_DIR_HOME}/"
+  update_file_owner "${REPO_DIR_DOTFILES}/${filename}"
+done
+
+echo "Copying scripts..."
+mkdir -p "${USER_DIR_SCRIPTS}"
+for filename in $REPO_DIR_SCRIPTS_USER/*; do
+  rm -f "${USER_DIR_SCRIPTS}/${filename}"
+  cp "${REPO_DIR_SCRIPTS_USER}/${filename}" "${USER_DIR_SCRIPTS}/"
+  update_file_owner "${REPO_DIR_SCRIPTS_USER}/${filename}"
 done
 
 # send exit message
