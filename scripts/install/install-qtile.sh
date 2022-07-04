@@ -87,7 +87,7 @@ REPO_DIR_DOTFILES="${REPO_DIR_ROOT}/dotfiles"
 REPO_DIR_QTILE="${REPO_DIR_ROOT}/qtile"
 
 update_file_owner() {
-  chown $USER_NAME:$USER_NAME "$1"
+  chown -R $USER_NAME:$USER_NAME "$1"
 }
 
 # install qtile
@@ -98,25 +98,28 @@ mkdir -p "$USER_DIR_HOME/logs"
 
 echo "Copying qtile files..."
 mkdir -p "$USER_DIR_QTILE_CONFIG"
-for filename in $REPO_DIR_QTILE/*; do
+for file in $REPO_DIR_QTILE/*; do
+  filename="${file##*/}"
   rm -f "${USER_DIR_QTILE_CONFIG}/${filename}"
   cp "${REPO_DIR_QTILE}/${filename}" "${USER_DIR_QTILE_CONFIG}/"
-  update_file_owner "${REPO_DIR_QTILE}/${filename}"
+  update_file_owner "${USER_DIR_QTILE_CONFIG}/${filename}"
 done
 
 echo "Copying dotfiles..."
-for filename in $REPO_DIR_DOTFILES/*; do
-  rm -f "${USER_DIR_HOME}/${filename}"
-  cp "${REPO_DIR_DOTFILES}/${filename}" "${USER_DIR_HOME}/"
-  update_file_owner "${REPO_DIR_DOTFILES}/${filename}"
+for file in $REPO_DIR_DOTFILES/*; do
+  filename="${file##*/}"
+  rm -f "${USER_DIR_HOME}/.${filename}"
+  cp "${REPO_DIR_DOTFILES}/${filename}" "${USER_DIR_HOME}/.${filename}"
+  update_file_owner "${USER_DIR_HOME}/.${filename}"
 done
 
 echo "Copying scripts..."
 mkdir -p "${USER_DIR_SCRIPTS}"
-for filename in $REPO_DIR_SCRIPTS_USER/*; do
-  rm -f "${USER_DIR_SCRIPTS}/${filename}"
-  cp "${REPO_DIR_SCRIPTS_USER}/${filename}" "${USER_DIR_SCRIPTS}/"
-  update_file_owner "${REPO_DIR_SCRIPTS_USER}/${filename}"
+for file in $REPO_DIR_SCRIPTS_USER/*; do
+  filename="${file##*/}"
+  rm -rf "${USER_DIR_SCRIPTS}/${filename}"
+  cp -r "${REPO_DIR_SCRIPTS_USER}/${filename}" "${USER_DIR_SCRIPTS}/"
+  update_file_owner "${USER_DIR_SCRIPTS}/${filename}"
 done
 
 # send exit message
