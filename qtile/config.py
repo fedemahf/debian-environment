@@ -35,6 +35,8 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from crypto_ticker_binance import CryptoTickerBinance
 
+import flag # pip install emoji-country-flag
+
 mod = "mod4"
 terminal = guess_terminal()
 
@@ -187,22 +189,28 @@ screens = [
                     update_interval=10,
                     crypto="BTC",
                     currency="USDT",
-                    format='{crypto}: {symbol}{amount:.2f}  | '
+                    format='{crypto}: {symbol}{amount:.2f},'
                 ),
                 CryptoTickerBinance(
                     update_interval=10,
                     crypto="BNB",
                     currency="USDT",
+                    format='{crypto}: {symbol}{amount:.2f},'
+                ),
+                 CryptoTickerBinance(
+                    update_interval=10,
+                    crypto="XMR",
+                    currency="USDT",
                     format='{crypto}: {symbol}{amount:.2f}  | '
                 ),
-                # widget.Spacer(length=10),
-                widget.CheckUpdates(
-                    distro="Debian",
-                    colour_have_updates="ff0000",
-                    display_format="Updates available: {updates}",
-                    no_update_string="System up to date"
+                # widget.TextBox(" | "),
+                widget.GenPollUrl(
+                    url='http://ip-api.com/json/',
+                    json=True,
+                    update_interval=20,
+                    # parse=lambda body : 'IP: ' +  body['query']
+                    parse=lambda body : flag.flag(body['countryCode']) + ' ' 
                 ),
-                widget.TextBox(" | "),
                 widget.Net(format='rx: {down}, tx: {up}'),
                 widget.NetGraph(),
                 widget.Memory(),
@@ -216,10 +224,20 @@ screens = [
             ],
             24
         ),
-        wallpaper='~/Downloads/BIKER_GIRL.jpg',
+        wallpaper='~/Dropbox/BIKER_GIRL.jpg',
         wallpaper_mode='stretch'
     ),
-    Screen(bottom=bar.Bar([widget.Prompt(), widget.WindowName()], 24))
+    Screen(
+        bottom=bar.Bar(
+            [
+                widget.Prompt(),
+                widget.WindowName(),
+                widget.Clock(format='%Y-%m-%d, %H:%Mhs')
+            ], 24
+        ),
+        wallpaper='~/Dropbox/BIKER_GIRL.jpg',
+        wallpaper_mode='fill'
+     )
 ]
 
 # Drag floating layouts.
