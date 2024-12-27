@@ -33,7 +33,7 @@ from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
-from crypto_ticker_binance import CryptoTickerBinance
+from custom_crypto_ticker import CustomCryptoTicker
 
 mod = "mod4"
 terminal = guess_terminal()
@@ -96,7 +96,7 @@ keys = [
     #Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "r", lazy.restart(), desc="Reload the config"),
 
-    #Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
+    Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(),
         desc="Spawn a command using a prompt widget"),
 
@@ -183,22 +183,24 @@ screens = [
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                 # widget.Clipboard(),
                 # widget.CurrentLayout(fmt='{}   | '),
-                CryptoTickerBinance(
+                CustomCryptoTicker(
                     update_interval=10,
                     crypto="BTC",
                     currency="USDT",
-                    format='{crypto}: {symbol}{amount:.2f},'
+                    format='{crypto}: {symbol}{amount:.2f}k,'
                 ),
-                CryptoTickerBinance(
-                    update_interval=10,
+                CustomCryptoTicker(
+                    update_interval=60,
                     crypto="BNB",
                     currency="USDT",
+                    api="binance",
                     format='{crypto}: {symbol}{amount:.2f},'
                 ),
-                 CryptoTickerBinance(
-                    update_interval=10,
+                CustomCryptoTicker(
+                    update_interval=60,
                     crypto="XMR",
                     currency="USDT",
+                    api="kucoin",
                     format='{crypto}: {symbol}{amount:.2f}  | '
                 ),
                 # widget.TextBox(" | "),
