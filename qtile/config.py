@@ -35,8 +35,6 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from crypto_ticker_binance import CryptoTickerBinance
 
-import flag # pip install emoji-country-flag
-
 mod = "mod4"
 terminal = guess_terminal()
 
@@ -204,14 +202,7 @@ screens = [
                     format='{crypto}: {symbol}{amount:.2f}  | '
                 ),
                 # widget.TextBox(" | "),
-                widget.GenPollUrl(
-                    url='http://ip-api.com/json/',
-                    json=True,
-                    update_interval=20,
-                    # parse=lambda body : 'IP: ' +  body['query']
-                    parse=lambda body : flag.flag(body['countryCode']) + ' ' 
-                ),
-                widget.Net(format='rx: {down}, tx: {up}'),
+                widget.Net(format='rx: {down:6.2f}{down_suffix:<2} tx: {up:6.2f}{up_suffix:<2}'),
                 widget.NetGraph(),
                 widget.Memory(),
                 widget.MemoryGraph(),
