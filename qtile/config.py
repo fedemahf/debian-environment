@@ -220,12 +220,9 @@ screens = [
                 widget.Systray(),
                 widget.Clock(format='%Y-%m-%d, %H:%Mhs'),
                 # widget.QuickExit(),
-                # widget.Wallpaper(wallpaper='wallpaper.jpg')
             ],
             24
         ),
-        wallpaper='~/Dropbox/BIKER_GIRL.jpg',
-        wallpaper_mode='stretch'
     ),
     Screen(
         bottom=bar.Bar(
@@ -235,8 +232,6 @@ screens = [
                 widget.Clock(format='%Y-%m-%d, %H:%Mhs')
             ], 24
         ),
-        wallpaper='~/Dropbox/BIKER_GIRL.jpg',
-        wallpaper_mode='fill'
      )
 ]
 
